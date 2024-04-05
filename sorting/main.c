@@ -52,7 +52,7 @@ void arrToHeap(int* arr, int current) {
         swap(&arr[bigger], &arr[current]);
         arrToHeap(arr, bigger);
     }
-
+    // else return, subtree sorted
 }
 
 
