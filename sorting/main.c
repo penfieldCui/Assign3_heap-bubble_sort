@@ -7,11 +7,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include <math.h>
 
 #define ARRAYSIZE 20000
+#define DISPLAYSIZE 63
 
-static heapSize = ARRAYSIZE;
+#define DEBUG
+
+static int heapSize = ARRAYSIZE;
 
 // Swap values of 2 variables
 void swap(int* a, int * b) {
@@ -59,17 +61,42 @@ void arrToHeap(int* arr, int current) {
 
 int main() {
     srand(time(NULL));
-	int* arr1 = NewArrayWithRandom(ARRAYSIZE);
-	int* arr2 = NewArrayWithRandom(ARRAYSIZE);
-	
-	for (int i = 0; i < ARRAYSIZE; i ++) {
-		arr2[i] = arr1[i];  //identical value 
+
+    int size = 0;
+
+#ifdef DEBUG
+
+    int* arr = NewArrayWithRandom(DISPLAYSIZE);
+    int arr1[DISPLAYSIZE];
+    int arr2[DISPLAYSIZE];
+
+    size = DISPLAYSIZE;
+
+    for (int i = 0; i < size; i++) {
+        arr1[i] = arr[i];
+        arr2[i] = arr[i];  //identical value 
     }
+    heapSize = DISPLAYSIZE;
+
+#else
+    int* arr1 = NewArrayWithRandom(ARRAYSIZE);
+    int* arr2 = NewArrayWithRandom(ARRAYSIZE);
+
+    size = ARRAYSIZE;
+
+    for (int i = 0; i < size; i++) {
+        arr2[i] = arr1[i];  //identical value 
+    }
+
+#endif // DEBUG
+
+
+    
 
     /** bubble **/
     // N^2
     clock_t startTime = clock();
-    bubbleSort(arr1, ARRAYSIZE);
+    bubbleSort(arr1, size);
 
     clock_t endTime = clock();
 
@@ -80,18 +107,21 @@ int main() {
 
 
     /** heap sort **/
-    //to heap   - N*logN
     startTime = clock();
 
-    for (int i = ARRAYSIZE - 1; i >= 0; i--) {
+    //to heap   - N*logN
+    for (int i = size - 1; i >= 0; i--) {
         arrToHeap(arr2, i); // start at root
     }
-    
+
+#ifdef DEBUG
+    display(arr2, DISPLAYSIZE);
+#endif // DEBUG
+
     //N*logN
-    for (int i = ARRAYSIZE - 1; i > 0; i--) {
+    for (int i = size - 1; i > 0; i--) {
         swap(&arr2[0], &arr2[i]); // move current root to last
         heapSize--; // the last element was sorted, size of heap minus 1
-        int x = heapSize;
         
         arrToHeap(arr2, 0);
     }
@@ -102,9 +132,17 @@ int main() {
     sortTime = (double)(endTime - startTime) / CLOCKS_PER_SEC;
     printf("Heap sort: %lf sec\n", sortTime);
 
+   
+
     /* the end */
+#ifdef DEBUG
+    display(arr2, DISPLAYSIZE);
+    destroyArr(arr);
+#else
     destroyArr(arr1);
     destroyArr(arr2);
+    
+#endif
 
 	return 0;
 }

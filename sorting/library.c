@@ -4,6 +4,7 @@
 
 #include "library.h"
 #include <stdlib.h>
+#include <math.h>
 
 
 static void printfSpaces(int spaces) {

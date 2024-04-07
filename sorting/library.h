@@ -2,7 +2,7 @@
 // 
 // DS&A assignment 3 - Zongping Cui
 #pragma once
-
+#include <stdio.h>
 
 
 int* NewArrayWithRandom(int);
